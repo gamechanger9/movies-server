@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +15,7 @@ namespace MoviesAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ActorsController : ControllerBase
+    public class ActorsController : BaseController
     {
         private readonly MoviesDBContext _dBContext;
         private readonly IMapper _mapper;
@@ -23,7 +24,7 @@ namespace MoviesAPI.Controllers
         private const string cacheTag = "actors";
         private readonly string container = "actors";
 
-        public ActorsController(MoviesDBContext dBContext, IMapper mapper, IOutputCacheStore outputCacheStore, IFileStorage fileStorage)
+        public ActorsController(MoviesDBContext dBContext, IMapper mapper, IOutputCacheStore outputCacheStore, IFileStorage fileStorage) : base(dBContext, mapper, outputCacheStore, cacheTag)
         {
             _dBContext = dBContext;
             _mapper = mapper;
@@ -36,10 +37,7 @@ namespace MoviesAPI.Controllers
         [OutputCache(Tags = [cacheTag])]
         public async Task<List<ActorDTO>> Get([FromQuery] PaginationDTO paginationDTO)
         {
-            var queryable = _dBContext.Actors;
-            await HttpContext.InsertPaginationParametersInHeaders(queryable);
-            var actors = await queryable.OrderBy(x => x.Name).Paginate(paginationDTO).ToListAsync();
-            return _mapper.Map<List<ActorDTO>>(actors);
+           return await Get<Actor, ActorDTO>(paginationDTO, a => a.Name);
         }
 
         // GET api/<ActorsController>/5
@@ -47,13 +45,15 @@ namespace MoviesAPI.Controllers
         [OutputCache(Tags = [cacheTag])]
         public async Task<ActionResult<ActorDTO>> Get(int id)
         {
-            var actor = await _dBContext.Actors.FirstOrDefaultAsync(x => x.Id == id);
-            if (actor == null)
-            {
-                return NotFound();
-            }
-            return _mapper.Map<ActorDTO>(actor);
+            return await GetById<Actor, ActorDTO>(id);
+        }
 
+        [HttpGet("{name}")]
+        public async Task<ActionResult<List<MovieActorDTO>>> Get(string name)
+        {
+            return await _dBContext.Actors.Where(a => a.Name.Contains(name))
+                .ProjectTo<MovieActorDTO>(_mapper.ConfigurationProvider)
+                .ToListAsync();
         }
 
         // POST api/<ActorsController>

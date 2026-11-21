@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MoviesAPI.DTOs;
+using System.ComponentModel.DataAnnotations;
 
 namespace MoviesAPI.Models
 {
-    public class Genre
+    public class Genre : IId
     {
         public int Id { get; set; }
 
