@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
 	  <NoWarn>${NoWarn};NU1903</NoWarn>
+    <UserSecretsId>cb31644c-53fb-4746-8230-81183cc2339f</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,7 +15,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.23" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.19" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.NetTopologySuite" Version="9.0.19" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.10">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.23">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

@@ -362,3 +362,7 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /appsettings.Development.json
+
+# Visual Studio Azure service dependency metadata
+Properties/ServiceDependencies/
+Properties/serviceDependencies*.json
